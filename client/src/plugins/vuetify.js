@@ -18,6 +18,8 @@ export default new Vuetify({
 			star: 'fas fa-star',
 			profile: 'fas fa-id-card',
 			signOut: 'fas fa-sign-out-alt',
+			gavel: 'fas fa-gavel',
+			email: 'fas fa-envelope',
 		},
 	},
 

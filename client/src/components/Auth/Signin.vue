@@ -19,7 +19,7 @@
       <v-flex xs12 sm6 offset-sm3>
         <v-card color="secondary" dark>
           <v-container>
-            <v-form @submit.prevent="handleSigninUser">
+            <v-form v-model="isFormValid" lazy-validation @submit.prevent="handleSigninUser">
               <v-layout row>
                 <v-flex xs12>
                   <v-text-field
@@ -27,6 +27,7 @@
                     prepend-icon="$vuetify.icon.user"
                     label="Username"
                     type="text"
+                    :rules="usernameRules"
                     required
                   ></v-text-field>
                 </v-flex>
@@ -39,6 +40,7 @@
                     prepend-icon="$vuetify.icon.lock"
                     label="Password"
                     type="password"
+                    :rules="passwordRules"
                     required
                   ></v-text-field>
                 </v-flex>
@@ -46,7 +48,12 @@
 
               <v-layout row>
                 <v-flex xs12>
-                  <v-btn :loading="loading" color="accent" type="submit">
+                  <v-btn
+                    :loading="loading"
+                    :disabled="!isFormValid || loading"
+                    color="accent"
+                    type="submit"
+                  >
                     <span slot="loader" class="custom-loader">
                       <v-icon light>fas fa-spinner</v-icon>
                     </span>
@@ -75,7 +82,21 @@ export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      isFormValid: true,
+      usernameRules: [
+        // Check if username in input
+        username => !!username || "Username is required",
+        // Make sure username is less than 10 characters
+        username =>
+          username.length < 10 || "Username must be less than 10 characters"
+      ],
+      passwordRules: [
+        password => !!password || "Password is required",
+        // Make sure password is at least 7 characters
+        password =>
+          password.length >= 4 || "Password must be at least 4 characters"
+      ]
     };
   },
 
