@@ -67,9 +67,26 @@ export default new Vuex.Store({
 				.mutate({
 					mutation: ADD_POST,
 					variables: payload,
+					update: (cash, { data: { addPost } }) => {
+						const data = cash.readQuery({ query: GET_POSTS });
+						data.getPosts.unshift(addPost);
+						cash.writeQuery({
+							query: GET_POSTS,
+							data,
+						});
+					},
+					optimisticResponse: {
+						__typename: 'Mutation',
+						addPost: {
+							__typename: 'Post',
+							_id: -1,
+							...payload,
+						},
+					},
 				})
+
 				.then(({ data }) => {
-					this.router.push('/');
+					router.push('/');
 					console.log('data.addPost', data.addPost);
 				})
 				.catch((err) => {
